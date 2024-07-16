@@ -1,0 +1,72 @@
+swagger: "2.0"
+info:
+  title: Image Creation API
+  description: API for creating images using Puppeteer.
+  version: 1.0.0
+host: image-creation-gateway-badi9a1f.ew.gateway.dev
+schemes:
+  - https
+paths:
+  /run-puppeteer:
+    post:
+      operationId: runPuppeteer
+      summary: Run Puppeteer
+      description: Runs Puppeteer to capture screenshots
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: URL and order specifications
+          required: true
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+              orderSpecifications:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    sku:
+                      type: string
+                    properties:
+                      type: object
+                      properties:
+                        font:
+                          type: string
+                        engravingText:
+                          type: string
+                        printImage:
+                          type: string
+      responses:
+        "200":
+          description: Job initiated successfully
+          schema:
+            type: object
+            properties:
+              jobId:
+                type: string
+                description: The ID of the job initiated
+        "400":
+          description: Invalid input
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+      x-google-backend:
+        address: https://image-creation-service-usqnwqotzq-ew.a.run.app # Replace with your Cloud Run URL
+        path_translation: APPEND_PATH_TO_ADDRESS
+      x-google-settings:
+        requestTimeout: 60s # Adjust to match Cloud Run timeout or higher
